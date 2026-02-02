@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using WMS.Application.Interfaces;
 using WMS.Infrastructure.Data;
+using WMS.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,7 @@ builder.Services.AddDbContext<WmsDbContext>(options =>
     );
     
 });
+builder.Services.AddScoped<IWorkRequestService, WorkRequestService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
