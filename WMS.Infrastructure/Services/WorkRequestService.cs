@@ -26,7 +26,7 @@ namespace WMS.Infrastructure.Services
             request.CreatedAt = DateTime.UtcNow;
             request.status = RequestStatus.Pending;
 
-            _dbContext.Add(request);
+            _dbContext.WorkRequests.Add(request);
 
             await _dbContext.SaveChangesAsync();
 
