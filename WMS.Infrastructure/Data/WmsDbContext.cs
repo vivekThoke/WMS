@@ -30,7 +30,7 @@ namespace WMS.Infrastructure.Data
                     .IsRequired()
                     .HasMaxLength(1000);
 
-                entity.Property(x => x.status)
+                entity.Property(x => x.Status)
                     .IsRequired();
             });
 

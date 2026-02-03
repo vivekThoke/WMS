@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using WMS.Application.DTOs;
 using WMS.Application.Interfaces;
 using WMS.Domain.Entities;
 using WMS.Domain.Enums;
@@ -20,11 +21,17 @@ namespace WMS.Infrastructure.Services
             this._dbContext = dbContext;
         }
 
-        public async Task<WorkRequest> CreateAsync(WorkRequest request)
+        public async Task<WorkRequest> CreateAsync(CreateWorkRequestDto dto)
         {
-            request.Id = Guid.NewGuid();
-            request.CreatedAt = DateTime.UtcNow;
-            request.status = RequestStatus.Pending;
+            var request = new WorkRequest
+            {
+                Id = Guid.NewGuid(),
+                Title = dto.Title,
+                Description = dto.Description,
+                CreatedAt = DateTime.UtcNow,
+                Status = RequestStatus.Pending
+            };
+            
 
             _dbContext.WorkRequests.Add(request);
 

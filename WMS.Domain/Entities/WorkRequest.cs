@@ -14,6 +14,6 @@ namespace WMS.Domain.Entities
         public string Description { get; set; } = null!;
         public string CreatedByUserId { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public RequestStatus status { get; set; }
+        public RequestStatus Status { get; set; }
     }
 }

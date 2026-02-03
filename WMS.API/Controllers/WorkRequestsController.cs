@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using WMS.Application.DTOs;
 using WMS.Application.Interfaces;
 using WMS.Domain.Entities;
 
@@ -17,9 +18,9 @@ namespace WMS.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] WorkRequest request)
+        public async Task<IActionResult> Create([FromBody] CreateWorkRequestDto dto)
         {
-            var result = await _service.CreateAsync(request);
+            var result = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetAll), new { id = result.Id }, result);
         }
 
