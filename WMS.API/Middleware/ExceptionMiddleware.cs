@@ -1,4 +1,7 @@
-﻿namespace WMS.API.Middleware
+﻿using System.Net;
+using System.Text.Json;
+
+namespace WMS.API.Middleware
 {
     public class ExceptionMiddleware
     {
@@ -9,6 +12,28 @@
         {
             _next = next;
             _logger = logger;
+        }
+
+        public async Task InvokeAsync(HttpContext context)
+        {
+            try
+            {
+                await _next(context);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unhandled Exception");
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.ContentType = "application/json";
+
+                var response = new
+                {
+                    error = "An unexpected error occurred",
+                    traceId = context.TraceIdentifier
+                };
+
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            }
         }
     }
 }
