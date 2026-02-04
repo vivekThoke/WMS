@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WMS.Application.DTOs
 {
-    public class CreateWorkRequestDto
+    public class CreateWorkRequestDto 
     {
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
