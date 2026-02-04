@@ -1,5 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using WMS.Application.DTOs;
 using WMS.Application.Interfaces;
+using WMS.Application.Validators;
 using WMS.Infrastructure.Data;
 using WMS.Infrastructure.Services;
 
@@ -17,6 +21,10 @@ builder.Services.AddDbContext<WmsDbContext>(options =>
     
 });
 builder.Services.AddScoped<IWorkRequestService, WorkRequestService>();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateWorkRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateWorkRequestDto>, CreateWorkRequestValidator>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
