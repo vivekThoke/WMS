@@ -21,7 +21,7 @@ namespace WMS.API.Controllers
         public async Task<IActionResult> Create([FromBody] CreateWorkRequestDto dto)
         {
             var result = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetAll), new { id = result.Id }, result);
+            return Ok(result);
         }
 
         [HttpGet]
