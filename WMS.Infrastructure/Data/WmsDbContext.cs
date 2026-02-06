@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WMS.Domain.Entities;
+using WMS.Infrastructure.Identity;
+
 
 namespace WMS.Infrastructure.Data
 {
-    public class WmsDbContext : DbContext
+    public class WmsDbContext : IdentityDbContext<ApplicationUser>
     {
         public WmsDbContext(DbContextOptions<WmsDbContext> options) : base(options) { }
+
+        
 
         public DbSet<WorkRequest> WorkRequests => Set<WorkRequest>();
 
