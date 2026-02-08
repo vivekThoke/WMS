@@ -30,9 +30,10 @@ namespace WMS.API.Controllers
         {
             var user = new ApplicationUser { UserName = request.email, Email = request.email };
             var result =  await _userManager.CreateAsync(user, request.password);
-            await _userManager.AddToRoleAsync(user, "Employee");
-
+           
             if (!result.Succeeded) return BadRequest(result.Errors);
+
+            await _userManager.AddToRoleAsync(user, "Admin");
 
             return Ok();
         }
