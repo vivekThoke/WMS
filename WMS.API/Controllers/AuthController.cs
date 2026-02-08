@@ -1,11 +1,17 @@
-﻿using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
+using WMS.Application.DTOs;
 using WMS.Infrastructure.Identity;
 
 namespace WMS.API.Controllers
 {
+
     [ApiController]
     [Route("api/auth")]
     public class AuthController : ControllerBase
@@ -20,10 +26,10 @@ namespace WMS.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(string email, string password)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
         {
-            var user = new ApplicationUser { UserName = email, Email = email };
-            var result =  await _userManager.CreateAsync(user, password);
+            var user = new ApplicationUser { UserName = request.email, Email = request.email };
+            var result =  await _userManager.CreateAsync(user, request.password);
 
             if (!result.Succeeded) return BadRequest(result.Errors);
 
@@ -31,21 +37,29 @@ namespace WMS.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login([FromBody] RegisterRequestDto request)
         {
-           var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(request.email);
 
-            if (user == null || !await _userManager.CheckPasswordAsync(user, password))
-            {
+            if (user == null || !await _userManager.CheckPasswordAsync(user, request.password))
                 return Unauthorized();
-            }
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, user.Email)
-            }; 
+            var claims = new[] { new Claim(ClaimTypes.Name, user.Email!) };
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
 
+            var token = new JwtSecurityToken(
+                        issuer: _configuration["Jwt:Issuer"],
+                        audience: _configuration["Jwt:Audience"],
+                        claims: claims,
+                        expires: DateTime.UtcNow.AddHours(1),
+                        signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+            );
+
+            return Ok(new {
+                token = new JwtSecurityTokenHandler().WriteToken(token)
+            });
         }
+
     }
 }
