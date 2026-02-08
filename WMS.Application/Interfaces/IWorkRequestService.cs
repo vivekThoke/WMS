@@ -12,5 +12,6 @@ namespace WMS.Application.Interfaces
     {
         Task<WorkRequest> CreateAsync(CreateWorkRequestDto dto);
         Task<IEnumerable<WorkRequest>> GetAllAsync();
+        Task ApproveAsync(Guid requestId);
     }
 }

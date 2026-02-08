@@ -19,6 +19,7 @@ namespace WMS.API.Controllers
             this._service = service;
         }
 
+        [Authorize(Roles = "Employee")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateWorkRequestDto dto)
         {
@@ -31,6 +32,14 @@ namespace WMS.API.Controllers
         {
             var result = await _service.GetAllAsync();
             return Ok(result);
+        }
+
+        [Authorize(Roles = "Manager")]
+        [HttpPost("{id}/approve")]
+        public async Task<IActionResult> Approve(Guid id)
+        {
+            await _service.ApproveAsync(id);
+            return NoContent();
         }
     }
 }

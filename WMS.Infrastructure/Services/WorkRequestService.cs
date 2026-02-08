@@ -45,5 +45,20 @@ namespace WMS.Infrastructure.Services
             return await _dbContext.WorkRequests.AsNoTracking().ToListAsync();
         }
 
+
+        public async Task ApproveAsync(Guid requestId)
+        {
+            var request = await _dbContext.WorkRequests.FindAsync(requestId);
+
+            if (request == null)
+                throw new Exception("Request not found");
+
+            if (request.Status != RequestStatus.Pending)
+                throw new Exception("Only pending request can be approved");
+
+            request.Status = RequestStatus.Approved;
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }
