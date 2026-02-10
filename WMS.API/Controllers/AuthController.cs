@@ -46,7 +46,19 @@ namespace WMS.API.Controllers
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.password))
                 return Unauthorized();
 
-            var claims = new[] { new Claim(ClaimTypes.Name, user.Email!) };
+            var userRoles =  await _userManager.GetRolesAsync(user);
+
+            //var claims = new[] { new Claim(ClaimTypes.Name, user.Email!) };
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email!),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            foreach(var userRole in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, userRole));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
 

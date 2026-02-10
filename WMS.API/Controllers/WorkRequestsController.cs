@@ -9,7 +9,7 @@ namespace WMS.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("/api/work-requests")]
+    [Route("api/work-requests")]
     public class WorkRequestsController : ControllerBase
     {
         private readonly IWorkRequestService _service;
